@@ -1,6 +1,7 @@
 package org.example.productservice.service;
 
 import org.example.productservice.dto.GenericProductDto;
+import org.example.productservice.exception.NotFoundException;
 import org.example.productservice.thirdpartyclients.fakestore.FakeStoreProductClient;
 import org.example.productservice.thirdpartyclients.fakestore.dtos.FakeStoreProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public GenericProductDto getProductById(Long id) {
+    public GenericProductDto getProductById(Long id) throws NotFoundException {
         return convertFakeStoreToGenericProduct(fakeStoreProductClient.getProductById(id));
     }
 

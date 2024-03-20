@@ -1,6 +1,7 @@
 package org.example.productservice.thirdpartyclients.fakestore;
 
 import org.example.productservice.dto.GenericProductDto;
+import org.example.productservice.exception.NotFoundException;
 import org.example.productservice.thirdpartyclients.fakestore.dtos.FakeStoreProductDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -30,12 +31,16 @@ public class FakeStoreProductClient {
         this.restTemplateBuilder=restTemplateBuilder;
         this.finalProductUrl=productBaseUrl+productPath;
     }
-    public FakeStoreProductDto getProductById(Long id) {
+    public FakeStoreProductDto getProductById(Long id) throws NotFoundException {
         RestTemplate restTemplate=restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDto= restTemplate.getForEntity(finalProductUrl+"/"+id,FakeStoreProductDto.class);
 
 
+        if(fakeStoreProductDto.getBody()==null)
+            throw new NotFoundException("The product with the given Id is not there");
+
         return fakeStoreProductDto.getBody();
+
     }
 
     public List<FakeStoreProductDto> getAllProducts() {

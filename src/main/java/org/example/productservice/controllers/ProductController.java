@@ -2,6 +2,7 @@ package org.example.productservice.controllers;
 
 
 import org.example.productservice.dto.GenericProductDto;
+import org.example.productservice.exception.NotFoundException;
 import org.example.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public GenericProductDto getProductsById(@PathVariable Long id)
+    public GenericProductDto getProductsById(@PathVariable Long id) throws NotFoundException
     {
          return productService.getProductById(id);
     }
