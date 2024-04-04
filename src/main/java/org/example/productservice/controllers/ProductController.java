@@ -2,10 +2,17 @@ package org.example.productservice.controllers;
 
 
 import org.example.productservice.dto.GenericProductDto;
+import org.example.productservice.dto.ValidateTokenRequestDto;
+import org.example.productservice.exception.JwtVerificationException;
 import org.example.productservice.exception.NotFoundException;
+import org.example.productservice.security.SessionStatus;
+import org.example.productservice.security.TokenValidator;
 import org.example.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +23,14 @@ import java.util.List;
 public class ProductController {
 
     private ProductService productService;
+    private TokenValidator tokenValidator;
 
     @Autowired
-    public ProductController(@Qualifier("fakestoreproductservice")ProductService productService)
+    public ProductController(@Qualifier("fakestoreproductservice")ProductService productService,
+                             TokenValidator tokenValidator)
     {
         this.productService =productService;
+        this.tokenValidator=tokenValidator;
     }
 
     @GetMapping()
@@ -30,8 +40,15 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public GenericProductDto getProductsById(@PathVariable Long id) throws NotFoundException
+    public GenericProductDto getProductsById(@RequestHeader(HttpHeaders.AUTHORIZATION) String authToken,
+                                             @PathVariable Long id) throws Exception
     {
+
+        ValidateTokenRequestDto validateTokenRequestDto=new ValidateTokenRequestDto();
+        validateTokenRequestDto.setToken(authToken);
+
+         SessionStatus sessionStatus= tokenValidator.validateToken(validateTokenRequestDto);
+
          return productService.getProductById(id);
     }
 

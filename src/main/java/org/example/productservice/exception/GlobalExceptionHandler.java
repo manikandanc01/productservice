@@ -19,4 +19,11 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(JwtVerificationException.class)
+    public ResponseEntity<ExceptionDto> handleJwtVerificationException(JwtVerificationException jwtVerificationException)
+    {
+        return new ResponseEntity<>(new ExceptionDto(HttpStatus.UNAUTHORIZED,jwtVerificationException.getMessage()),
+                HttpStatus.UNAUTHORIZED);
+    }
+
 }
