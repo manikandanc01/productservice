@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TokenValidator {
 
     private RestTemplateBuilder restTemplateBuilder;
-    private String tokenValidationUrl="http://localhost:8080/auth/validate";
+    private String tokenValidationUrl="http://localhost:9000/auth/validate";
 
     public TokenValidator(RestTemplateBuilder restTemplateBuilder)
     {
